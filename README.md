@@ -137,7 +137,7 @@ response sample
 
 ```
 
-> get /wallet/withdraw
+> POST /wallet/withdraw
 
 General:
  - Withdraw from wallet
