@@ -1,8 +1,8 @@
-import path from 'path'
-import knex from 'knex'
-import schemaInspector from 'knex-schema-inspector';
-
 require('dotenv/config')
+import knex from 'knex'
+import schemaInspector from 'knex-schema-inspector'
+const environment = process.env.ENVIRONMENT || 'development'
+
 
 const config  = {
   development: {
@@ -21,9 +21,26 @@ const config  = {
     },
     seeds: { directory: "./seeds" },
     useNullAsDefault: true
+  },
+  production:{
+    client: 'mysql',
+    connection: {
+      host: process.env.HOST,
+      port : 3306,
+      database : process.env.DATABASE,
+      user : process.env.USER,
+      password : process.env.PASSWORD,
+    },
+    migrations: {
+      // tableName: path.resolve(__dirname, 'src', 'database', 'migrations')
+      tableName: 'migrations',
+      directory: "./migrations"
+    },
+    seeds: { directory: "./seeds" },
+    useNullAsDefault: true
   }
 }
-export const db = knex(config['development'])
+export const db = knex(config[environment])
 
 export const inspector = schemaInspector(db);
 
