@@ -1,3 +1,4 @@
+import "dotenv/config";
 import app from './appConnect';
 const APP_PORT = process.env.APP_PORT;
 
