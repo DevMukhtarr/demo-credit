@@ -2,9 +2,9 @@
   "name": "demo_credit",
   "version": "1.0.0",
   "description": "",
-  "main": "./dist/src/app.js",
+  "main": "src/app.js",
   "scripts": {
-    "start": "tsc && node ./dist/src/app.js",
+    "start": "tsc && node src/app.js",
     "dev": "tsc && nodemon src/app.ts",
     "knex": "knex",
     "lint": "eslint . --ext .ts",

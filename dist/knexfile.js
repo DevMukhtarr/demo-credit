@@ -13,9 +13,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.inspector = exports.db = void 0;
+require('dotenv/config');
 const knex_1 = __importDefault(require("knex"));
 const knex_schema_inspector_1 = __importDefault(require("knex-schema-inspector"));
-require('dotenv/config');
+const environment = process.env.ENVIRONMENT || 'development';
 const config = {
     development: {
         client: 'mysql',
@@ -33,9 +34,26 @@ const config = {
         },
         seeds: { directory: "./seeds" },
         useNullAsDefault: true
+    },
+    production: {
+        client: 'mysql',
+        connection: {
+            host: process.env.HOST,
+            port: 3306,
+            database: process.env.DATABASE,
+            user: process.env.USER,
+            password: process.env.PASSWORD,
+        },
+        migrations: {
+            // tableName: path.resolve(__dirname, 'src', 'database', 'migrations')
+            tableName: 'migrations',
+            directory: "./migrations"
+        },
+        seeds: { directory: "./seeds" },
+        useNullAsDefault: true
     }
 };
-exports.db = (0, knex_1.default)(config['development']);
+exports.db = (0, knex_1.default)(config[environment]);
 exports.inspector = (0, knex_schema_inspector_1.default)(exports.db);
 const hasTable = () => __awaiter(void 0, void 0, void 0, function* () {
     yield exports.db.schema.hasTable('users').then((created) => {
