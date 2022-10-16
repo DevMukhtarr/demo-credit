@@ -4,7 +4,7 @@
   "description": "",
   "main": "src/app.js",
   "scripts": {
-    "start": "tsc && node src/app.js",
+    "start": "node src/app.js",
     "dev": "tsc && nodemon src/app.ts",
     "knex": "knex",
     "lint": "eslint . --ext .ts",
