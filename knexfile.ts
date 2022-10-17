@@ -30,7 +30,6 @@ const config  = {
       database : process.env.DATABASE,
       user : process.env.USER,
       password : process.env.PASSWORD,
-      ssl: { rejectUnauthorized: false }
     },
     migrations: {
       // tableName: path.resolve(__dirname, 'src', 'database', 'migrations')
@@ -39,6 +38,7 @@ const config  = {
     },
     seeds: { directory: "./seeds" },
     useNullAsDefault: true,
+    ssl: { rejectUnauthorized: false }
   }
 }
 export const db = knex(config[environment])
