@@ -1,4 +1,4 @@
-require('dotenv/config')
+import "dotenv/config";
 import knex from 'knex'
 import schemaInspector from 'knex-schema-inspector'
 const environment = process.env.ENVIRONMENT || 'development'
