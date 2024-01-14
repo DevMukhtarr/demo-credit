@@ -5,11 +5,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 require("dotenv/config");
 const appConnect_1 = __importDefault(require("./appConnect"));
-const APP_PORT = process.env.APP_PORT;
+const PORT = process.env.PORT;
 appConnect_1.default.get('/', (req, res) => {
-    res.send('Hello World!');
+    res.send('Squad co!');
 });
-appConnect_1.default.listen(APP_PORT, () => {
-    return console.log(`App is listening at Port ${APP_PORT}`);
+appConnect_1.default.listen(PORT, () => {
+    return console.log(`App is listening at Port ${PORT}`);
 });
 //# sourceMappingURL=app.js.map

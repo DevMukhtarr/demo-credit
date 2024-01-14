@@ -1,5 +1,5 @@
 import express from 'express';
-import '../knexfile';
+import database from "./config/connect"
 const app = express();
 
 import authroute from './routes/authroute';
@@ -13,6 +13,7 @@ app.use(
   );
   
 app.use(express.json());
+app.use(database)
 app.use(authroute)
 app.use(mainroute)
 

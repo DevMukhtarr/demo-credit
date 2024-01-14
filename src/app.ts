@@ -1,11 +1,11 @@
 import "dotenv/config";
 import app from './appConnect';
-const APP_PORT = process.env.APP_PORT;
+const PORT = process.env.PORT;
 
 app.get('/', (req, res) => {
-  res.send('Hello World!');
+  res.send('transfuse!');
 });
 
-app.listen(APP_PORT, () => {
-  return console.log(`App is listening at Port ${APP_PORT}`);
+app.listen(PORT, () => {
+  return console.log(`App is listening at Port ${PORT}`);
 });
