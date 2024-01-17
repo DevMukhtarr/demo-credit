@@ -40,7 +40,7 @@ export const signUp = async (req:Request, res:Response) => {
                     password: encryptedPassword
             })
     
-        const jwt_token = jwt.sign({
+        const jwt_token = await jwt.sign({
             user_id: newUser._id,
             email: email
         }, process.env.JWT_TOKEN_KEY, {
@@ -85,11 +85,11 @@ export const signIn = async (req: Request, res: Response) =>{
         }
         
         if(user.email && (await bcrypt.compare(password, user.password))){
-                const jwt_token = jwt.sign({
+                const jwt_token = await jwt.sign({
                     user_id: user._id,
                     email: email
                 }, process.env.JWT_TOKEN_KEY, {
-                    expiresIn: "123",
+                    expiresIn: "123d",
                 })
                 
                 return res.status(200).json({

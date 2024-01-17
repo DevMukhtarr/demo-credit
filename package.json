@@ -24,6 +24,7 @@
   },
   "dependencies": {
     "@types/knex": "^0.16.1",
+    "axios": "^1.6.5",
     "bcryptjs": "^2.4.3",
     "dotenv": "^16.0.3",
     "express": "^4.17.1",
@@ -31,6 +32,7 @@
     "knex": "^2.3.0",
     "knex-schema-inspector": "^2.0.4",
     "mongoose": "^8.0.4",
-    "mysql": "^2.18.1"
+    "mysql": "^2.18.1",
+    "uuid": "^9.0.1"
   }
 }

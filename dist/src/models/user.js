@@ -24,13 +24,11 @@ const userSchema = new mongoose_1.Schema({
     },
     account_number: {
         type: String,
-        trim: true,
-        required: true,
+        trim: true
     },
     balance: {
         type: String,
         trim: true,
-        required: true,
     },
     password: {
         type: String,
@@ -38,7 +36,6 @@ const userSchema = new mongoose_1.Schema({
     },
     organization: {
         type: String,
-        required: true,
     },
     createdAt: {
         type: Date,

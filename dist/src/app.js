@@ -7,7 +7,7 @@ require("dotenv/config");
 const appConnect_1 = __importDefault(require("./appConnect"));
 const PORT = process.env.PORT;
 appConnect_1.default.get('/', (req, res) => {
-    res.send('Squad co!');
+    res.send('transfuse!');
 });
 appConnect_1.default.listen(PORT, () => {
     return console.log(`App is listening at Port ${PORT}`);
