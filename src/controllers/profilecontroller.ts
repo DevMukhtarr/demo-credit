@@ -80,13 +80,15 @@ export const getProfile = async (req: Request, res: Response,) => {
 
         const user = await User.findById(user_id);
 
+        const { password, createdAt, account_number, ...userWithoutSomeData } = user.toJSON();
+
         const profile = user;
 
         return res.status(200).json({
             status: true,
-            message:"An error occured ",
+            message:"User profile",
             data: {
-                profile
+                userWithoutSomeData
             }
         });
     } catch (error) {

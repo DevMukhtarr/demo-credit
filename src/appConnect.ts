@@ -5,7 +5,6 @@ const app = express();
 import authroute from './routes/authroute';
 import mainroute from './routes/mainroute';
 import profileroute from './routes/profileroute';
-import cors from "cors"
 
 
 app.use(
@@ -14,7 +13,6 @@ app.use(
     })
   );
   
-app.use(cors)
 app.use(express.json());
 app.use(database)
 app.use(authroute)
