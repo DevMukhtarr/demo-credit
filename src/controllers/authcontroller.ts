@@ -1,15 +1,23 @@
 import "dotenv/config";
 import jwt from "jsonwebtoken";
-import bcrypt from "bcryptjs"
+import bcrypt from "bcryptjs";
 import { Request, Response } from "express";
-import Transaction from "../models/transaction";
+import { Transaction } from "../models/transaction";
 import User from "../models/user";
 // new user sign up
 export const signUp = async (req:Request, res:Response) => {
     try {
-        const { first_name, last_name, user_name, email, password, confirm_password } = req.body
+        const { 
+            first_name, 
+            last_name, 
+            user_name, 
+            email, 
+            password, 
+            organization,
+            confirm_password, 
+        } = req.body
     
-        if(!(first_name || last_name || user_name || email || password || confirm_password)){
+        if(!(first_name || last_name || user_name || email || password || organization || confirm_password)){
             return res.status(400).send("All inputs are required");
         }
     
@@ -37,6 +45,7 @@ export const signUp = async (req:Request, res:Response) => {
                     last_name,
                     user_name,
                     email: email,
+                    organization: organization,
                     password: encryptedPassword
             })
     

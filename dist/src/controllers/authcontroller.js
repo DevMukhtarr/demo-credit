@@ -20,8 +20,8 @@ const user_1 = __importDefault(require("../models/user"));
 // new user sign up
 const signUp = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { first_name, last_name, user_name, email, password, confirm_password } = req.body;
-        if (!(first_name || last_name || user_name || email || password || confirm_password)) {
+        const { first_name, last_name, user_name, email, password, organization, confirm_password, } = req.body;
+        if (!(first_name || last_name || user_name || email || password || organization || confirm_password)) {
             return res.status(400).send("All inputs are required");
         }
         if (password !== confirm_password) {
@@ -44,6 +44,7 @@ const signUp = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             last_name,
             user_name,
             email: email,
+            organization: organization,
             password: encryptedPassword
         });
         const jwt_token = yield jsonwebtoken_1.default.sign({

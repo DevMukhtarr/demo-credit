@@ -1,35 +1,52 @@
-import { Schema, model } from 'mongoose';
+import mongoose, { Schema, Document } from 'mongoose';
+
+// Enum representing transaction types
+enum TransactionType {
+  FUNDING = 'FUNDING',
+  MONEY_TRANSFER = 'MONEY_TRANSFER',
+}
+
+interface ITransaction extends Document {
+  user: string;
+  type: TransactionType;
+  amount: number;
+  description?: string;
+  recipients?: string[]; 
+  timestamp: Date;
+  transactionReference: string;
+}
 
 const transactionSchema = new Schema({
-    name: {
-        type: String, 
-        trim: true,
-        required: true,
-    },
-    state: {
-        type: String,
-        trim: true,
-        required: true,
-    },
-    email: {
-        type: String,
-        trim: true,
-        required: true,
-    },
-    password: {
-        type: String,
-        required: true,
-    },
-    organization: {
-        type: String,
-        required: true,
-    },
-    createdAt: {
-        type: Date,
-        default: Date.now,
-    },
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true,
+  },
+  type: {
+    type: String,
+    enum: [TransactionType.FUNDING, TransactionType.MONEY_TRANSFER],
+    required: true,
+  },
+  amount: {
+    type: Number,
+    required: true,
+  },
+  description: {
+    type: String,
+  },
+  recipients: {
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: 'User',
+  },
+  transactionReference: {
+    type: String
+  },
+  timestamp: {
+    type: Date,
+    default: Date.now,
+  },
 });
 
-const Transaction = model('User', transactionSchema)
+const Transaction = mongoose.model<ITransaction>('Transaction', transactionSchema);
 
-export default Transaction
+export { Transaction, TransactionType };

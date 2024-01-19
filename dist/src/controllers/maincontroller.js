@@ -12,8 +12,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.withdrawFunds = exports.transferFunds = exports.fundWallet = exports.makeMultipleTransactions = exports.makeSingleTransfer = void 0;
+exports.withdrawFunds = exports.transferFunds = exports.fundWallet = exports.makeMultipleTransactions = exports.makeSingleTransfer = exports.testUser = void 0;
 const testtransactions_1 = require("../config/testtransactions");
+const utils_1 = require("../config/utils");
 const axios_1 = __importDefault(require("axios"));
 require("dotenv/config");
 const config = process.env;
@@ -21,6 +22,11 @@ const squadcoPrivateKey = config.SQUADCOPRIVATEKEY;
 const headers = {
     Authorization: `Bearer ${squadcoPrivateKey}`,
 };
+const testUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const user = res.locals.user;
+    console.log(user);
+});
+exports.testUser = testUser;
 const makeSingleTransfer = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const transfer = yield axios_1.default.post(`https://sandbox-api-d.squadco.com/payout/transfer`, {
@@ -104,22 +110,24 @@ const makeMultipleTransactions = (req, res) => __awaiter(void 0, void 0, void 0,
 });
 exports.makeMultipleTransactions = makeMultipleTransactions;
 const fundWallet = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { amount } = req.body;
     const headers = {
         Authorization: `Bearer ${squadcoPrivateKey}`,
     };
+    const user = res.locals.user;
     try {
         const sendMoney = yield axios_1.default.post(`https://sandbox-api-d.squadco.com/transaction/initiate`, {
-            "amount": 43000,
-            "email": "mytekissues@gmail.com",
+            "amount": amount * 100,
+            "email": user.email,
             "currency": "NGN",
             "initiate_type": "inline",
-            "transaction_ref": "4678388588350909090Az",
+            "transaction_ref": (0, utils_1.generateTransactionReference)(),
             "callback_url": "http://squadco.com"
         }, { headers });
         if (sendMoney.status == 200) {
             return res.status(200).json({
                 status: true,
-                message: "Transaction made",
+                message: "Transaction successful",
                 data: {
                     info: sendMoney.data
                 }

@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import User from "../models/user";
-import Transaction from "../models/transaction";
+import { Transaction, TransactionType } from "../models/transaction";
 import { transactions } from "../config/testtransactions";
 import { generateTransactionReference } from "../config/utils";
 import axios from "axios";
@@ -12,7 +12,10 @@ const squadcoPrivateKey = config.SQUADCOPRIVATEKEY;
 const headers = {
             Authorization: `Bearer ${squadcoPrivateKey}`,
           };
-
+export const testUser = async (req: Request, res: Response) =>{
+    const user = res.locals.user
+    console.log(user)
+}
 export const makeSingleTransfer = async (req: Request, res: Response) =>{
     try {
             const transfer = await axios.post(`https://sandbox-api-d.squadco.com/payout/transfer`, {
@@ -47,6 +50,29 @@ export const makeSingleTransfer = async (req: Request, res: Response) =>{
 
         } catch (error) {
             console.log(error.response)
+        return res.status(500).json({
+            status: false,
+            message:"An error occured " + error,
+        });
+    }
+}
+
+export const getBalance = async (req: Request, res: Response,) => {
+    try {
+        const user_id = res.locals.user.user_id;
+
+        const user = await User.findById(user_id);
+
+        const balance = user.balance;
+
+        return res.status(200).json({
+            status: true,
+            message:"An error occured ",
+            data: {
+                balance
+            }
+        });
+    } catch (error) {
         return res.status(500).json({
             status: false,
             message:"An error occured " + error,
@@ -98,23 +124,39 @@ export const makeMultipleTransactions = async (req: Request, res: Response) =>{
 }
 
 export const fundWallet = async (req: Request, res: Response) =>{
+    const { amount } = req.body;
     const headers = {
         Authorization: `Bearer ${squadcoPrivateKey}`,
       }
+      const user = res.locals.user
+      const transactionReference = generateTransactionReference();
     try {
         const sendMoney = await axios.post(`https://sandbox-api-d.squadco.com/transaction/initiate`, {
-            "amount":43000,
-            "email":"mytekissues@gmail.com",
+            "amount": parseFloat(amount)*100,
+            "email": user.email,
             "currency":"NGN",
             "initiate_type": "inline",
-            "transaction_ref":"4678388588350909090Az",
+            "transaction_ref": transactionReference,
             "callback_url":"http://squadco.com"
         }, { headers });
 
         if(sendMoney.status == 200){
+            await User.findByIdAndUpdate(
+                user.user_id,
+                { $inc: { balance: amount } }
+                )
+
+            await Transaction.create({
+                user: user.user_id,
+                type: TransactionType.FUNDING,
+                amount: parseFloat(amount),
+                transactionReference: transactionReference,
+                description: "Funding successful"
+            })
+
             return res.status(200).json({
                 status: true,
-                message:"Transaction made",
+                message:"Transaction Processing, Follow checkout url to complete transaction",
                 data: {
                     info: sendMoney.data
                 }
