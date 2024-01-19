@@ -1,7 +1,9 @@
 import "dotenv/config";
 import app from './appConnect';
+import cors from "cors"
 const PORT = process.env.PORT;
 
+app.use(cors)
 app.get('/', (req, res) => {
   res.send('transfuse!');
 });

@@ -73,3 +73,26 @@ export const editProfile = async (req: Request, res: Response) => {
           });
     }
 }
+
+export const getProfile = async (req: Request, res: Response,) => {
+    try {
+        const user_id = res.locals.user.user_id;
+
+        const user = await User.findById(user_id);
+
+        const profile = user;
+
+        return res.status(200).json({
+            status: true,
+            message:"An error occured ",
+            data: {
+                profile
+            }
+        });
+    } catch (error) {
+        return res.status(500).json({
+            status: false,
+            message:"An error occured " + error,
+        });
+    }
+}

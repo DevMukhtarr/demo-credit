@@ -57,29 +57,6 @@ export const makeSingleTransfer = async (req: Request, res: Response) =>{
     }
 }
 
-export const getBalance = async (req: Request, res: Response,) => {
-    try {
-        const user_id = res.locals.user.user_id;
-
-        const user = await User.findById(user_id);
-
-        const balance = user.balance;
-
-        return res.status(200).json({
-            status: true,
-            message:"An error occured ",
-            data: {
-                balance
-            }
-        });
-    } catch (error) {
-        return res.status(500).json({
-            status: false,
-            message:"An error occured " + error,
-        });
-    }
-}
-
 export const makeMultipleTransactions = async (req: Request, res: Response) =>{
     try {
         const batchSize = 5;
