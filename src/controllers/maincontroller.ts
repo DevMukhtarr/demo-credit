@@ -17,15 +17,23 @@ export const testUser = async (req: Request, res: Response) =>{
     console.log(user)
 }
 export const makeSingleTransfer = async (req: Request, res: Response) =>{
+    const { 
+        remark,
+        bank_code,
+        amount,
+        account_number,
+        account_name
+     } = req.body
     try {
+        const transactionReference = generateTransactionReference()
             const transfer = await axios.post(`https://sandbox-api-d.squadco.com/payout/transfer`, {
-                "remark": "Second single transaction test",
-                "bank_code":"000013",
+                "remark": remark,
+                "bank_code": bank_code,
                 "currency_id": "NGN",
-                "amount": "10000",
-                "account_number":"0123456789",
-                "transaction_reference":"SBLYDJBXZZ_123478",
-                "account_name":"BOLUS PAUL"
+                "amount": parseFloat(amount)*100,
+                "account_number": account_number,
+                "transaction_reference": transactionReference,
+                "account_name": account_name
             }, { headers })
            
             if(transfer.status == 200){
