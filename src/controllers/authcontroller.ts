@@ -74,12 +74,7 @@ export const signUp = async (req:Request, res:Response) => {
 // signin 
 export const signIn = async (req: Request, res: Response) =>{
     const { email, password } = req.body
-    try {
-        // validating user input
-        if (!(email || password)) {
-            return res.status(400).send("All inputs are required");
-          }
-    
+    try { 
         const user = await User.findOne({email: email})
     
         if(!user){

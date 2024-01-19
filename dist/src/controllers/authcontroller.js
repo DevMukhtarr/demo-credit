@@ -21,9 +21,6 @@ const user_1 = __importDefault(require("../models/user"));
 const signUp = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { first_name, last_name, user_name, email, password, organization, confirm_password, } = req.body;
-        if (!(first_name || last_name || user_name || email || password || organization || confirm_password)) {
-            return res.status(400).send("All inputs are required");
-        }
         if (password !== confirm_password) {
             return res.status(409).json({
                 status: false,
@@ -77,10 +74,6 @@ exports.signUp = signUp;
 const signIn = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { email, password } = req.body;
     try {
-        // validating user input
-        if (!(email || password)) {
-            return res.status(400).send("All inputs are required");
-        }
         const user = yield user_1.default.findOne({ email: email });
         if (!user) {
             return res.status(409).json({
