@@ -12,10 +12,7 @@ const squadcoPrivateKey = config.SQUADCOPRIVATEKEY;
 const headers = {
             Authorization: `Bearer ${squadcoPrivateKey}`,
           };
-export const testUser = async (req: Request, res: Response) =>{
-    const user = res.locals.user
-    console.log(user)
-}
+
 export const makeSingleTransfer = async (req: Request, res: Response) =>{
     const { 
         remark,
@@ -163,27 +160,4 @@ export const fundWallet = async (req: Request, res: Response) =>{
             message:"An error occured" + error
     })
 }
-}
-
-export const transferFunds = async (req: Request, res:Response) =>{
-    try {
-      
-    } catch (error) {
-        return  res.status(500).json({
-            status: false,
-            message:"An error occured" + error
-        });
-    }
-}
-
-export const withdrawFunds = async (req: Request, res:Response) => {
-
-    try {
-        
-    } catch (error) {
-        return  res.status(500).json({
-            status: false,
-            message:"An error occured"
-        })
-    }
 }
