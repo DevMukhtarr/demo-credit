@@ -20,7 +20,7 @@ const user_1 = __importDefault(require("../models/user"));
 // new user sign up
 const signUp = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { first_name, last_name, user_name, email, password, organization, confirm_password, } = req.body;
+        const { first_name, last_name, user_name, email, organization, password, confirm_password, } = req.body;
         if (password !== confirm_password) {
             return res.status(409).json({
                 status: false,

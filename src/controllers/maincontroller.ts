@@ -161,3 +161,14 @@ export const fundWallet = async (req: Request, res: Response) =>{
     })
 }
 }
+
+export const verifyTransaction = async (req: Request, res: Response) => {
+    try {
+        
+    } catch (error) {
+        return res.status(500).json({
+            status: true,
+            message:"An error occured" + error
+        })
+    }
+}

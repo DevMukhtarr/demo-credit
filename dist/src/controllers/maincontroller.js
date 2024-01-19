@@ -12,7 +12,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.withdrawFunds = exports.transferFunds = exports.fundWallet = exports.makeMultipleTransactions = exports.makeSingleTransfer = exports.testUser = void 0;
+exports.verifyTransaction = exports.fundWallet = exports.makeMultipleTransactions = exports.makeSingleTransfer = void 0;
+const user_1 = __importDefault(require("../models/user"));
+const transaction_1 = require("../models/transaction");
 const testtransactions_1 = require("../config/testtransactions");
 const utils_1 = require("../config/utils");
 const axios_1 = __importDefault(require("axios"));
@@ -22,21 +24,18 @@ const squadcoPrivateKey = config.SQUADCOPRIVATEKEY;
 const headers = {
     Authorization: `Bearer ${squadcoPrivateKey}`,
 };
-const testUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const user = res.locals.user;
-    console.log(user);
-});
-exports.testUser = testUser;
 const makeSingleTransfer = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { remark, bank_code, amount, account_number, account_name } = req.body;
     try {
+        const transactionReference = (0, utils_1.generateTransactionReference)();
         const transfer = yield axios_1.default.post(`https://sandbox-api-d.squadco.com/payout/transfer`, {
-            "remark": "Second single transaction test",
-            "bank_code": "000013",
+            "remark": remark,
+            "bank_code": bank_code,
             "currency_id": "NGN",
-            "amount": "10000",
-            "account_number": "0123456789",
-            "transaction_reference": "SBLYDJBXZZ_123478",
-            "account_name": "BOLUS PAUL"
+            "amount": parseFloat(amount) * 100,
+            "account_number": account_number,
+            "transaction_reference": `SBLYDJBXZZ${transactionReference}`,
+            "account_name": account_name
         }, { headers });
         if (transfer.status == 200) {
             return res.status(200).json({
@@ -115,19 +114,28 @@ const fundWallet = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         Authorization: `Bearer ${squadcoPrivateKey}`,
     };
     const user = res.locals.user;
+    const transactionReference = (0, utils_1.generateTransactionReference)();
     try {
         const sendMoney = yield axios_1.default.post(`https://sandbox-api-d.squadco.com/transaction/initiate`, {
-            "amount": amount * 100,
+            "amount": parseFloat(amount) * 100,
             "email": user.email,
             "currency": "NGN",
             "initiate_type": "inline",
-            "transaction_ref": (0, utils_1.generateTransactionReference)(),
+            "transaction_ref": transactionReference,
             "callback_url": "http://squadco.com"
         }, { headers });
         if (sendMoney.status == 200) {
+            yield user_1.default.findByIdAndUpdate(user.user_id, { $inc: { balance: amount } });
+            yield transaction_1.Transaction.create({
+                user: user.user_id,
+                type: transaction_1.TransactionType.FUNDING,
+                amount: parseFloat(amount),
+                transactionReference: transactionReference,
+                description: "Funding successful"
+            });
             return res.status(200).json({
                 status: true,
-                message: "Transaction successful",
+                message: "Transaction Processing, Follow checkout url to complete transaction",
                 data: {
                     info: sendMoney.data
                 }
@@ -154,26 +162,15 @@ const fundWallet = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     }
 });
 exports.fundWallet = fundWallet;
-const transferFunds = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const verifyTransaction = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
     }
     catch (error) {
         return res.status(500).json({
-            status: false,
+            status: true,
             message: "An error occured" + error
         });
     }
 });
-exports.transferFunds = transferFunds;
-const withdrawFunds = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-    }
-    catch (error) {
-        return res.status(500).json({
-            status: false,
-            message: "An error occured"
-        });
-    }
-});
-exports.withdrawFunds = withdrawFunds;
+exports.verifyTransaction = verifyTransaction;
 //# sourceMappingURL=maincontroller.js.map
