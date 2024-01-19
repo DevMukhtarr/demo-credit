@@ -32,7 +32,7 @@ export const makeSingleTransfer = async (req: Request, res: Response) =>{
                 "currency_id": "NGN",
                 "amount": parseFloat(amount)*100,
                 "account_number": account_number,
-                "transaction_reference": transactionReference,
+                "transaction_reference": `SBLYDJBXZZ${transactionReference}`,
                 "account_name": account_name
             }, { headers })
            

@@ -17,10 +17,6 @@ export const signUp = async (req:Request, res:Response) => {
             confirm_password, 
         } = req.body
     
-        // if(!(first_name || last_name || user_name || email || password || organization || confirm_password)){
-        //     return res.status(400).send("All inputs are required");
-        // }
-    
         if( password !== confirm_password){
             return res.status(409).json({
                 status: false,
