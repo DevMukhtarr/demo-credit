@@ -12,8 +12,8 @@ export const signUp = async (req:Request, res:Response) => {
             last_name, 
             user_name, 
             email, 
-            password, 
             organization,
+            password, 
             confirm_password, 
         } = req.body
     
